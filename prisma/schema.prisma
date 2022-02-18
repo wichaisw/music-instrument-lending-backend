@@ -1,0 +1,111 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+model BorrowingTransaction {
+  id           Int       @id(map: "PK_BorrowingTransaction") @default(autoincrement())
+  isLost       Boolean   @default(false, map: "DF_borrowing_transaction_is_lost")
+  price        Decimal   @db.Decimal(10, 2)
+  date         DateTime
+  overdue_date DateTime?
+  defectImage  String?   @db.NVarChar(500)
+  defectText   String?   @db.NVarChar(Max)
+  createdAt    DateTime?
+  createdBy    Int?
+  updatedAt    DateTime?
+  updatedBy    Int?
+  userId       Int
+  User         User      @relation(fields: [userId], references: [id])
+}
+
+model Instrument {
+  id           Int            @id(map: "PK_Instrument") @default(autoincrement())
+  type         String         @db.NVarChar(50)
+  price        Decimal        @db.Decimal(10, 2)
+  name         String         @db.NVarChar(200)
+  brand        String         @db.NVarChar(50)
+  info         String
+  status       String         @default("available", map: "DF_Instrument_status") @db.NVarChar(50)
+  createdAt    DateTime?
+  createdBy    Int?
+  updatedAt    DateTime?
+  updatedBy    Int?
+  userId       Int?
+  User         User?          @relation(fields: [userId], references: [id], onDelete: NoAction)
+  productImage productImage[]
+  Review       Review[]
+}
+
+model productImage {
+  id           Int        @id(map: "PK_ProductImage") @default(autoincrement())
+  imageUrl     String
+  createdAt    DateTime?
+  createdBy    Int?
+  updatedAt    DateTime?
+  updatedBy    Int?
+  instrumentId Int
+  Instrument   Instrument @relation(fields: [instrumentId], references: [id], onDelete: Cascade)
+}
+
+model Review {
+  id           Int        @id(map: "PK_Review") @default(autoincrement())
+  star         Int
+  text         String?    @db.NVarChar(Max)
+  imageUrl     String?    @db.NVarChar(500)
+  videoUrl     String?    @db.NVarChar(500)
+  createdAt    DateTime?
+  createdBy    Int?
+  updatedAt    DateTime?
+  updatedBy    Int?
+  userId       Int
+  instrumentId Int
+  Instrument   Instrument @relation(fields: [instrumentId], references: [id], onDelete: Cascade)
+  User         User       @relation(fields: [userId], references: [id], onUpdate: NoAction)
+}
+
+model Role {
+  id        Int        @id(map: "PK_Role") @default(autoincrement())
+  name      String?    @db.NVarChar(50)
+  createdAt DateTime?
+  createdBy Int?
+  updatedAt DateTime?
+  updatedBy Int?
+  UserRole  UserRole[]
+}
+
+model User {
+  id                   Int                    @id(map: "PK_User") @default(autoincrement())
+  firstName            String                 @db.NVarChar(100)
+  lastName             String                 @db.NVarChar(100)
+  dateOfBirth          DateTime?
+  address              String?
+  phoneNumber          String                 @db.NVarChar(20)
+  userLevel            Int                    @default(0, map: "DF_User_userLevel")
+  point                Int                    @default(0, map: "DF_User_point")
+  createdAt            DateTime?
+  createdBy            Int?
+  updatedAt            DateTime?
+  updatedBy            Int?
+  BorrowingTransaction BorrowingTransaction[]
+  Instrument           Instrument[]
+  Review               Review[]
+  UserRole             UserRole[]
+}
+
+model UserRole {
+  userId    Int
+  roleId    Int
+  createdAt DateTime?
+  createdBy Int?
+  updatedAt DateTime?
+  updatedBy Int?
+  Role      Role      @relation(fields: [roleId], references: [id])
+  User      User      @relation(fields: [userId], references: [id])
+
+  @@id([userId, roleId])
+}
