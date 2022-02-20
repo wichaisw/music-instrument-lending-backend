@@ -4,6 +4,6 @@ import * as instrumentController from '../controllers/instruments';
 const router: Router = express.Router();
 
 router.get('/', instrumentController.retrieveAllInstruments);
-router.post('/create', instrumentController.createInstrument);
+router.post('/', instrumentController.createInstrument);
 
 export default router;
