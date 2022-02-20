@@ -1,15 +1,16 @@
-import { Request, Response, NextFunction } from 'express'
-import { PrismaClient } from '@prisma/client';
+import { Request, Response } from 'express'
+import { IInstrument } from '../interfaces/instruments';
+import prisma from '../prisma/client';
+import { Prisma } from '@prisma/client';
 
-const prisma = new PrismaClient()
 
 // ANCHOR GET /admin/products/
 const retrieveAllInstruments = async(req: Request, res: Response) => {
   console.log('retrieveAllProducts');
   try {
-    const instruments = await prisma.instrument.findMany({
+    const instruments: IInstrument[] = await prisma.instrument.findMany({
       include: {
-        productImage: true,
+        productImages: true,
         reviews: true,
       }
     })
@@ -21,12 +22,12 @@ const retrieveAllInstruments = async(req: Request, res: Response) => {
 }
 
 // ANCHOR POST /admin/products/create
-const createInstruments = async(req: Request, res: Response) => {
+const createInstrument = async(req: Request, res: Response) => {
   console.log('createInstruments');
   const { type,  price, name, brand, info } = req.body;
   
   try{
-    const instrument = await prisma.instrument.create({
+    const instrument: IInstrument = await prisma.instrument.create({
       data: {
         type,
         price,
@@ -44,5 +45,5 @@ const createInstruments = async(req: Request, res: Response) => {
 
 export {
   retrieveAllInstruments,
-  createInstruments,
+  createInstrument,
 }
