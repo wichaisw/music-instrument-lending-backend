@@ -21,6 +21,26 @@ const retrieveAllInstruments = async(req: Request, res: Response) => {
   }
 }
 
+
+// ANCHOR GET /products/:id
+const retrieveInstrumentById = async(req: Request, res: Response) => {
+  console.log('retrieveProductById');
+
+  const id:number = Number(req.params.id);
+
+  try {
+    const instrument: IInstrument = await prisma.instrument.findFirst({
+      where: { id }
+    });
+
+    res.status(200).json(instrument);
+  } catch(err) {
+    res.status(400).json({message: err})
+  }
+}
+
+// ----------------------------------- Admin Controller ----------------------------------------
+
 // ANCHOR POST /admin/products/create
 const createInstrument = async(req: Request, res: Response) => {
   console.log('createInstruments');
@@ -43,7 +63,10 @@ const createInstrument = async(req: Request, res: Response) => {
   }
 }
 
+// ANCHOR PUT /admin/products/edit
+
 export {
   retrieveAllInstruments,
+  retrieveInstrumentById,
   createInstrument,
 }
