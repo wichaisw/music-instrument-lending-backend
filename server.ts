@@ -1,6 +1,7 @@
-import express, { Application, Request, Response } from 'express';
+import express, { Application } from 'express';
 import cors from 'cors';
 
+import * as errorController from './controllers/error';
 import instrumentRoutes from './routes/instruments';
 import imageRoutes from './routes/images';
 
@@ -15,6 +16,9 @@ app.use(cors({
 
 app.use('/products', instrumentRoutes);
 app.use('/images', imageRoutes);
+
+// catch all, path '/' by default
+app.get('/404', errorController.get404);
 
 app.listen(8000, () => {
   console.log("Express server is running on port 8000")
