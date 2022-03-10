@@ -1,9 +1,9 @@
 import express, { Application } from 'express';
 import cors from 'cors';
 import * as errorController from './controllers/error';
-import instrumentRoutes from './routes/instruments';
-import imageRoutes from './routes/images';
-import { logErrors, clientErrorHandler, errorHandler } from './utils/errorHandlers';
+import instrumentRoutes from './routes/instrument.router';
+import imageRoutes from './routes/image.router';
+import { logErrors, errorHandler } from './utils/errorHandlers';
 
 export const app: Application = express();
 
@@ -20,7 +20,6 @@ app.use('/images', imageRoutes);
 // catch all
 // app.use('/404', errorController.get404);
 app.use(logErrors)
-app.use(clientErrorHandler)
 app.use(errorHandler)
 
 app.listen(8000, () => {

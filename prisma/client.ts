@@ -1,15 +1,17 @@
 import { PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient({
+const prisma: PrismaClient = new PrismaClient({
   rejectOnNotFound: {
-    findFirst: {
-      Instrument: (err) => new Error('Instrument Not Found'),
-    },
     findUnique: {
-      Instrument: (err) => new Error('Instrument Not Found'),
-    }
+      Instrument: (err) => {
+        return new Error(`Instrument Not Found: ${err}`)
+      },
+    },
+    findFirst: {
+      Instrument: (err) => new Error(`Instrument Not Found: ${err}`),
+    },
   }
-}
-);
+});
+
 
 export default prisma;

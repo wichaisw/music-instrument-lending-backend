@@ -1,28 +1,26 @@
 import { Request, Response } from 'express';
-import { IImages } from '../interfaces/images';
 import prisma from '../prisma/client';
+import { FullImageDTO, ImageDTO } from '../dtos/Image.dto';
 
 // ANCHOR GET /admin/images
-const retrieveAllImages = async(req: Request, res: Response) => {
+const retrieveAllImages = async() => {
   console.log('retrieveAllImages');
 
   try {
-    const images = await prisma.productImage.findMany();
-    res.status(200).json(images);
+    const images: FullImageDTO[] = await prisma.productImage.findMany();
+    return images;
   } catch(err) {
-    res.status(400).json({message: err});
+    throw(err);
   }
 }
 
 // ANCHOR POST /admin/images
-const createImages = async(req: Request, res: Response) => {
-  console.log('createImage');
+const createImages = async(images: ImageDTO[]) => {
+  console.log('createImages');
   
-  const images: IImages[] = req.body;
-
   try {
     const productImages = await Promise.all(
-      images.map(async (image: IImages) => {
+      images.map(async (image: ImageDTO) => {
         await prisma.productImage.create({
           data: {
             instrumentId: image.instrumentId,
@@ -32,10 +30,9 @@ const createImages = async(req: Request, res: Response) => {
       })
     )
 
-    res.status(201).json(productImages);
+   return productImages;
   } catch(err) {
-    res.status(400).json({message: err});
-
+   throw(err);
   }
 }
 
