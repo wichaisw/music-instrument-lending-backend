@@ -15,8 +15,6 @@ const retrieveAllInstruments = async() => {
       }
     })
 
-    throw({message: 'something wrong'})
-
     return instruments;
   } catch(err) {
     throw(err);

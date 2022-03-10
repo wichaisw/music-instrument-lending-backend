@@ -1,10 +1,6 @@
 import { Decimal } from "@prisma/client/runtime";
 import { ImageDTO } from "./Image.dto";
-import { Prisma } from '@prisma/client';
-import { retrieveAllInstruments } from "../controllers/instruments";
 import { BaseDTO } from "./Base.dto";
-
-
 interface InstrumentDTO {
   name: string;
   type: string;

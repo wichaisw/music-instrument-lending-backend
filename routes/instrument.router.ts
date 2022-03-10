@@ -1,5 +1,5 @@
 import express, { NextFunction, Request, Response, Router } from 'express';
-import * as instrumentController from '../controllers/instruments';
+import * as instrumentController from '../controllers/instrument.controller';
 import { FullInstrumentDTO, InstrumentDTO } from '../dtos/Instrument.dto';
 
 const router: Router = express.Router();

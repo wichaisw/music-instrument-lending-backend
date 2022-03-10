@@ -1,5 +1,5 @@
 import express, { NextFunction, Request, Response, Router } from 'express';
-import * as imageController from '../controllers/images';
+import * as imageController from '../controllers/image.controller';
 import { FullImageDTO, ImageDTO } from '../dtos/Image.dto';
 
 const router: Router = express.Router();
