@@ -1,11 +1,11 @@
-import { Request, Response } from 'express'
+import { NextFunction, Request, Response } from 'express'
 import { IInstrument } from '../interfaces/instruments';
 import prisma from '../prisma/client';
 import { Prisma } from '@prisma/client';
 
 
-// ANCHOR GET /admin/products/
-const retrieveAllInstruments = async(req: Request, res: Response) => {
+// ANCHOR GET /products
+const retrieveAllInstruments = async() => {
   console.log('retrieveAllProducts');
   try {
     const instruments: IInstrument[] = await prisma.instrument.findMany({
@@ -14,37 +14,39 @@ const retrieveAllInstruments = async(req: Request, res: Response) => {
         reviews: true,
       }
     })
-
-    return res.status(200).json(instruments);
+    return instruments;
   } catch(err) {
-    return res.status(400).json({message: err});
+    throw(err);
   }
 }
 
 
 // ANCHOR GET /products/:id
-const retrieveInstrumentById = async(req: Request, res: Response) => {
+const retrieveInstrumentById = async(id: number) => {
   console.log('retrieveProductById');
 
-  const id:number = Number(req.params.id);
-
   try {
-    const instrument: IInstrument = await prisma.instrument.findFirst({
+    const instrument: IInstrument | null = await prisma.instrument.findUnique({
       where: { id }
     });
 
-    res.status(200).json(instrument);
+    // TODO null custom exception
+    if(!instrument) {
+      throw new Error('instrument not found');
+    }
+
+    return instrument;
+
   } catch(err) {
-    res.status(400).json({message: err})
+    throw(err)
   }
 }
 
 // ----------------------------------- Admin Controller ----------------------------------------
 
-// ANCHOR POST /admin/products/create
-const createInstrument = async(req: Request, res: Response) => {
+// ANCHOR POST /products
+const createInstrument = async(type: string, price: number, name: string, brand: string, info: string) => {
   console.log('createInstruments');
-  const { type,  price, name, brand, info } = req.body;
   
   try{
     const instrument: IInstrument = await prisma.instrument.create({
@@ -57,9 +59,9 @@ const createInstrument = async(req: Request, res: Response) => {
       }
     })
 
-    return res.status(201).json(instrument);
+    return instrument
   } catch(err) {
-    return res.status(400).json({message: err});
+    throw(err)
   }
 }
 
