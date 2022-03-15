@@ -5,9 +5,7 @@ interface ImageDTO {
   instrumentId: number;
 }
 
-interface FullImageDTO extends ImageDTO, BaseDTO {
-  id: number;
-}
+interface FullImageDTO extends ImageDTO, BaseDTO {}
 
 export {
   ImageDTO,
