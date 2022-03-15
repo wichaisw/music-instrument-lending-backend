@@ -40,11 +40,11 @@ model Instrument {
   updatedBy  Int?
   userId     Int?
   user        User?    @relation(fields: [userId], references: [id], onDelete: NoAction)
-  productImages productImage[]
+  productImages ProductImage[]
   reviews     Review[]
 }
 
-model productImage {
+model ProductImage {
   id          Int     @id(map: "PK_ProductImage") @default(autoincrement())
   imageUrl    String  @db.NVarChar(1000)
   createdAt  DateTime?

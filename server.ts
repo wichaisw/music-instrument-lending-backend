@@ -1,6 +1,5 @@
 import express, { Application } from 'express';
 import cors from 'cors';
-import * as errorController from './controllers/error';
 import instrumentRoutes from './routes/instrument.router';
 import imageRoutes from './routes/image.router';
 import { logErrors, errorHandler } from './utils/errorHandlers';

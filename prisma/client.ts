@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { Context } from "./context";
 
 const prisma: PrismaClient = new PrismaClient({
   rejectOnNotFound: {
@@ -13,5 +14,6 @@ const prisma: PrismaClient = new PrismaClient({
   }
 });
 
+const ctx: Context = { prisma };
 
-export default prisma;
+export { prisma, ctx };

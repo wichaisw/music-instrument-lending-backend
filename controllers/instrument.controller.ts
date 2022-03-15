@@ -1,14 +1,11 @@
-import { NextFunction, Request, Response } from 'express'
-import prisma from '../prisma/client';
-import { Prisma } from '@prisma/client';
 import { FullInstrumentDTO, InstrumentDTO } from '../dtos/Instrument.dto';
-
+import { Context } from '../prisma/context';
 
 // ANCHOR GET /products
-const retrieveAllInstruments = async() => {
+const retrieveAllInstruments = async(ctx: Context) => {
   console.log('retrieveAllProducts');
   try {
-    const instruments: FullInstrumentDTO[] = await prisma.instrument.findMany({
+    const instruments: FullInstrumentDTO[] = await ctx.prisma.instrument.findMany({
       include: {
         productImages: true,
         reviews: true,
@@ -23,12 +20,16 @@ const retrieveAllInstruments = async() => {
 
 
 // ANCHOR GET /products/:id
-const retrieveInstrumentById = async(id: number) => {
+const retrieveInstrumentById = async(id: number, ctx: Context) => {
   console.log('retrieveProductById');
 
   try {
-    const instrument: FullInstrumentDTO | null = await prisma.instrument.findUnique({
-      where: { id }
+    const instrument: FullInstrumentDTO | null = await ctx.prisma.instrument.findUnique({
+      where: { id },
+      include: {
+        productImages: true,
+        reviews: true,
+      }
     });
 
     // TODO null custom exception
@@ -46,12 +47,12 @@ const retrieveInstrumentById = async(id: number) => {
 // ----------------------------------- Admin Controller ----------------------------------------
 
 // ANCHOR POST /products
-const createInstrument = async(instrument: InstrumentDTO) => {
+const createInstrument = async(instrument: InstrumentDTO, ctx: Context) => {
   console.log('createInstruments');
   const { type,  price, name, brand, info } = instrument;  
 
   try{
-    const instrument: FullInstrumentDTO = await prisma.instrument.create({
+    const instrument: InstrumentDTO = await ctx.prisma.instrument.create({
       data: {
         type,
         price,
