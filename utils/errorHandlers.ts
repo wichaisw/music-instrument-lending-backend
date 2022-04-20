@@ -1,17 +1,22 @@
 import { NextFunction, Request, Response } from "express"
+import AppError from "../errors/AppError"
+// import winston from './logger';
 
-function logErrors (err: Error, req: Request, res: Response, next: NextFunction) {
-  
-  if(err.message) console.log(err.message)
-  if(err.stack) console.error(err.stack)
-  next(err)
-}
+// const logger = winston(module);
 
-function errorHandler (err: Error, req: Request, res: Response, next: NextFunction) {
-  res.status(400).json({ error: err })
+// function logErrors (err: AppError, req: Request, res: Response, next: NextFunction) {
+//   // if(err.message) logger.log('error m', err.message)
+//   // if(err.stack) logger.error('error s', err.stack)
+//   console.log("error handler")
+
+//   next(err)
+// }
+
+function errorHandler (err: AppError, req: Request, res: Response, next: NextFunction) {
+  res.status(err.statusCode).json(err.message)
 }
 
 export {
-  logErrors,
+  // logErrors,
   errorHandler
 }

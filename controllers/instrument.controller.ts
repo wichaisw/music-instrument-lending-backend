@@ -1,5 +1,10 @@
-import { FullInstrumentDTO, InstrumentDTO } from '../dtos/Instrument.dto';
+
+import { FullInstrumentDTO, InstrumentDTO, PostInstrumentDTO } from '../dtos/Instrument.dto';
+import AppError from '../errors/AppError';
 import { Context } from '../prisma/context';
+import winston from '../utils/logger';
+
+const logger = winston(module);
 
 // ANCHOR GET /products
 const retrieveAllInstruments = async(ctx: Context) => {
@@ -13,8 +18,9 @@ const retrieveAllInstruments = async(ctx: Context) => {
     })
 
     return instruments;
-  } catch(err) {
-    throw(err);
+  } catch(err: any) {
+    logger.error(err);
+    throw new AppError(500, 'error retrieving instruments');
   }
 }
 
@@ -22,26 +28,27 @@ const retrieveAllInstruments = async(ctx: Context) => {
 // ANCHOR GET /products/:id
 const retrieveInstrumentById = async(id: number, ctx: Context) => {
   console.log('retrieveProductById');
-
+  let instrument: FullInstrumentDTO | null;
   try {
-    const instrument: FullInstrumentDTO | null = await ctx.prisma.instrument.findUnique({
+    instrument = await ctx.prisma.instrument.findUnique({
       where: { id },
       include: {
         productImages: true,
         reviews: true,
       }
     });
-
-    // TODO null custom exception
-    if(!instrument) {
-      throw new Error('instrument not found');
-    }
-
-    return instrument;
-
-  } catch(err) {
-    throw(err)
+  } catch(err: any) {
+    logger.error(err);
+    throw new AppError(500, 'error retrieving an instrument')
   }
+
+  // TODO null custom exception
+  if(!instrument) {
+    logger.error('instrument not found');
+    throw new AppError(404, 'instrument not found');
+  }
+
+  return instrument;
 }
 
 // ----------------------------------- Admin Controller ----------------------------------------
@@ -52,7 +59,7 @@ const createInstrument = async(instrument: InstrumentDTO, ctx: Context) => {
   const { type,  price, name, brand, info } = instrument;  
 
   try{
-    const instrument: InstrumentDTO = await ctx.prisma.instrument.create({
+    const instrument: PostInstrumentDTO = await ctx.prisma.instrument.create({
       data: {
         type,
         price,
@@ -61,10 +68,11 @@ const createInstrument = async(instrument: InstrumentDTO, ctx: Context) => {
         info
       }
     })
-
+    
     return instrument
-  } catch(err) {
-    throw(err)
+  } catch(err: any) {
+    logger.error(err);
+    throw new AppError(500, 'error creating an instrument');
   }
 }
 

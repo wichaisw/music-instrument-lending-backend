@@ -1,6 +1,7 @@
 import express, { NextFunction, Request, Response, Router } from 'express';
 import * as instrumentController from '../controllers/instrument.controller';
 import { FullInstrumentDTO, InstrumentDTO } from '../dtos/Instrument.dto';
+import AppError from '../errors/AppError';
 import { ctx } from '../prisma/client';
 const router: Router = express.Router();
 
@@ -29,7 +30,7 @@ router.post('/', async (req: Request, res: Response, next: NextFunction) => {
   try{
     const instrument: InstrumentDTO = await instrumentController.createInstrument(req.body as InstrumentDTO, ctx);
     return res.status(201).json(instrument);
-  } catch(err) {
+  } catch(err:any ) {
     next(err);
   }
 });

@@ -64,6 +64,7 @@
     "utils-merge": "^1.0.1",
     "v8-compile-cache-lib": "^3.0.0",
     "vary": "^1.1.2",
+    "winston": "^3.6.0",
     "yn": "^3.1.1"
   },
   "devDependencies": {

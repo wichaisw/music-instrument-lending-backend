@@ -2,7 +2,7 @@ import express, { Application } from 'express';
 import cors from 'cors';
 import instrumentRoutes from './routes/instrument.router';
 import imageRoutes from './routes/image.router';
-import { logErrors, errorHandler } from './utils/errorHandlers';
+import { errorHandler } from './utils/errorHandlers';
 
 export const app: Application = express();
 
@@ -17,8 +17,6 @@ app.use('/products', instrumentRoutes);
 app.use('/images', imageRoutes);
 
 // catch all
-// app.use('/404', errorController.get404);
-app.use(logErrors)
 app.use(errorHandler)
 
 app.listen(8000, () => {
