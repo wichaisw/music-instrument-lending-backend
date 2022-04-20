@@ -8,7 +8,7 @@ const logger = winston(module);
 
 // ANCHOR GET /products
 const retrieveAllInstruments = async(ctx: Context) => {
-  console.log('retrieveAllProducts');
+  logger.info('retrieveAllProducts');
   try {
     const instruments: FullInstrumentDTO[] = await ctx.prisma.instrument.findMany({
       include: {
@@ -27,7 +27,7 @@ const retrieveAllInstruments = async(ctx: Context) => {
 
 // ANCHOR GET /products/:id
 const retrieveInstrumentById = async(id: number, ctx: Context) => {
-  console.log('retrieveProductById');
+  logger.info('retrieveProductById');
   let instrument: FullInstrumentDTO | null;
   try {
     instrument = await ctx.prisma.instrument.findUnique({
@@ -55,7 +55,7 @@ const retrieveInstrumentById = async(id: number, ctx: Context) => {
 
 // ANCHOR POST /products
 const createInstrument = async(instrument: InstrumentDTO, ctx: Context) => {
-  console.log('createInstruments');
+  logger.info('createInstruments');
   const { type,  price, name, brand, info } = instrument;  
 
   try{

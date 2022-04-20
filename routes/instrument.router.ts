@@ -8,7 +8,7 @@ const router: Router = express.Router();
 router.get('/', async(req: Request, res: Response, next: NextFunction) => {
   try {
     const instruments: FullInstrumentDTO[] = await instrumentController.retrieveAllInstruments(ctx)
-    return res.status(200).json(instruments);
+    res.status(200).json(instruments);
   } catch(err) {
     next(err);
   }
@@ -19,7 +19,7 @@ router.get('/:id', async(req: Request, res: Response, next: NextFunction) => {
 
   try {
     const instrument: FullInstrumentDTO = await instrumentController.retrieveInstrumentById(instrumentId, ctx);
-    return res.status(200).json(instrument);
+    res.status(200).json(instrument);
   } catch(err) {
     next(err);
   }
@@ -29,7 +29,7 @@ router.post('/', async (req: Request, res: Response, next: NextFunction) => {
   
   try{
     const instrument: InstrumentDTO = await instrumentController.createInstrument(req.body as InstrumentDTO, ctx);
-    return res.status(201).json(instrument);
+    res.status(201).json(instrument);
   } catch(err:any ) {
     next(err);
   }

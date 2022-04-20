@@ -1,21 +1,26 @@
 import { FullImageDTO, ImageDTO } from '../dtos/Image.dto';
+import AppError from '../errors/AppError';
 import { Context } from '../prisma/context';
+import winston from '../utils/logger';
+
+const logger = winston(module);
 
 // ANCHOR GET /admin/images
 const retrieveAllImages = async(ctx: Context) => {
-  console.log('retrieveAllImages');
+  logger.info('retrieveAllImages');
 
   try {
     const images: FullImageDTO[] = await ctx.prisma.productImage.findMany();
     return images;
   } catch(err) {
-    throw(err);
+    logger.error(err)
+    throw new AppError(500, 'error retrieving images');
   }
 }
 
 // ANCHOR POST /admin/images
 const createImages = async(images: ImageDTO[], ctx: Context) => {
-  console.log('createImages');
+  logger.info('createImages');
   
   try {
     const productImages = await Promise.all(
@@ -31,7 +36,8 @@ const createImages = async(images: ImageDTO[], ctx: Context) => {
 
    return productImages;
   } catch(err) {
-   throw(err);
+    logger.error(err)
+    throw new AppError(500, 'error creating images');
   }
 }
 

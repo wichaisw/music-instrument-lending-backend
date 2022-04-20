@@ -6,7 +6,7 @@ import { ctx }  from '../prisma/client';
 const router: Router = express.Router();
 
 router.get('/', async (req: Request, res: Response, next: NextFunction) => {
-    try {
+  try {
     const images: FullImageDTO[] = await imageController.retrieveAllImages(ctx);
     res.status(200).json(images);
   } catch(err) {
